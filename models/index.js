@@ -19,9 +19,9 @@ const {
   QueueLog,
   Prescription,
   Payment,
-  District,
   ReceptionistProfile,
-  ChemistProfile
+  ChemistProfile,
+  Address
 } = db;
 
 // Associations
@@ -37,10 +37,6 @@ ChemistProfile.belongsTo(DoctorProfile, { foreignKey: 'doctorId' });
 // User -> receptionistProfile
 ReceptionistProfile.belongsTo(User, { foreignKey: 'userId' });
 ReceptionistProfile.belongsTo(DoctorProfile, { foreignKey: 'assignedDoctorId', as: 'AssignedDoctor' });
-
-// User -> District
-User.belongsTo(District, { foreignKey: "districtId" });
-District.hasMany(User, { foreignKey: "districtId" });
 
 // Appointments
 User.hasMany(Appointment, { foreignKey: "patientId", as: "PatientAppointments" });
@@ -67,6 +63,28 @@ Payment.belongsTo(Appointment, { foreignKey: "appointmentId" });
 
 User.hasMany(Payment, { foreignKey: "userId" });
 Payment.belongsTo(User, { foreignKey: "userId" });
+
+// profile images
+
+User.hasOne(ProfileImage, { foreignKey: "userId", onDelete: "CASCADE" });
+ProfileImage.belongsTo(User, { foreignKey: "userId" });
+
+DoctorProfile.belongsTo(User, { foreignKey: "userId" });
+User.hasOne(DoctorProfile, { foreignKey: "userId" });
+
+ChemistProfile.belongsTo(User, { foreignKey: "userId" });
+User.hasOne(ChemistProfile, { foreignKey: "userId" });
+
+// user verification
+
+User.hasOne(Verification, { foreignKey: "userId", onDelete: "CASCADE" });
+Verification.belongsTo(User, { foreignKey: "userId" });
+
+// address 
+
+Address.belongsTo(User, { foreignKey: 'userId' });
+Address.belongsTo(DoctorProfile, { foreignKey: 'userId', targetKey: 'userId', constraints: false });
+Address.belongsTo(ChemistProfile, { foreignKey: 'userId', targetKey: 'userId', constraints: false });
 
 db.sequelize = sequelize;
 module.exports = db;

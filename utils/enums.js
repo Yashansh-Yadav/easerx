@@ -5,4 +5,6 @@ const USER_ROLES = [
     { id: 4, name: "receptionist" }
   ];
   
-  module.exports = { USER_ROLES };
+  const ROLES_TO_VERIFY =  ["doctor", "chemist"]
+
+  module.exports = { USER_ROLES,ROLES_TO_VERIFY };
